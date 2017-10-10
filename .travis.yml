@@ -1,0 +1,20 @@
+language: python
+python:
+- '3.6'
+cache: pip
+install:
+- pip install awscli
+script:
+  - echo "All Travis jobs need a script!"
+deploy:
+  on:
+    branch: master
+  provider: s3
+  access_key_id: "$AWS_ACCESS_KEY_ID"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+  bucket: www.basingstoke.io
+  region: eu-west-2
+  local_dir: site
+after_deploy:
+- aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID
+  --paths "/*"
